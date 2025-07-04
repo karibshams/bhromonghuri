@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Trip Planner - Bhromonghuri</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* Trip Planner Specific Styles */
+        .planner-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .planner-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .planner-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+        
+        .form-group input,
+        .form-group select {
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .interests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .interest-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .interest-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .ai-result {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            display: none;
+        }
+        
+        .ai-result.show {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+        
+        .loading-animation {
+            text-align: center;
+            padding: 3rem;
+            display: none;
+        }
+        
+        .loading-animation.show {
+            display: block;
+        }
+        
+        .loading-dots {
+            display: inline-flex;
+            gap: 0.5rem;
+        }
+        
+        .loading-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        
+        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        .itinerary-day {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--light-color);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .save-options {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation (Same as other pages) -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="images/logo.png" alt="Bhromonghuri" class="logo">
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link">Home</a>
+                <div class="nav-dropdown">
+                    <a href="trips.html" class="nav-link">Explore Trips <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="trips.html?type=domestic">Domestic Trips</a>
+                        <a href="trips.html?type=international">International Trips</a>
+                    </div>
+                </div>
+                <a href="trip-planner.html" class="nav-link active ai-link">
+                    <i class="fas fa-robot"></i> AI Trip Planner
+                </a>
+                <a href="gallery.html" class="nav-link">Gallery</a>
+                <a href="events.html" class="nav-link">Events</a>
+                <a href="blog.html" class="nav-link">Blog</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="page-header" style="background: var(--gradient);">
+        <div class="container">
+            <h1 class="animate-fade-in">AI Trip Planner</h1>
+            <p class="animate-fade-in-up">Get personalized trip itineraries powered by artificial intelligence</p>
+        </div>
+    </header>
+
+    <!-- Trip Planner Section -->
+    <section class="trip-planner-section">
+        <div class="planner-container">
+            <div class="planner-header">
+                <h2>Plan Your Perfect Trip</h2>
+                <p>Tell us about your preferences and our AI will create a customized itinerary just for you!</p>
+            </div>
+
+            <!-- Planning Form -->
+            <form class="planner-form" id="tripPlannerForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="destination">Where do you want to go?</label>
+                        <input type="text" id="destination" name="destination" placeholder="e.g., Thailand, Cox's Bazar" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="duration">Trip Duration (days)</label>
+                        <input type="number" id="duration" name="duration" min="1" max="30" placeholder="e.g., 5" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="budget">Budget per Person (BDT)</label>
+                        <input type="number" id="budget" name="budget" min="1000" placeholder="e.g., 25000" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="travelers">Number of Travelers</label>
+                        <input type="number" id="travelers" name="travelers" min="1" max="20" value="1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="travelStyle">Travel Style</label>
+                        <select id="travelStyle" name="travelStyle" required>
+                            <option value="">Select Style</option>
+                            <option value="adventure">Adventure</option>
+                            <option value="relaxation">Relaxation</option>
+                            <option value="cultural">Cultural</option>
+                            <option value="luxury">Luxury</option>
+                            <option value="budget">Budget</option>
+                            <option value="family">Family</option>
+                            <option value="romantic">Romantic</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" id="startDate" name="startDate" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>What are your interests? (Select all that apply)</label>
+                    <div class="interests-grid">
+                        <label class="interest-checkbox">
+                            <input type="checkbox" name="interests" value="beach">
+                            <span>Beach & Ocean</span>
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" name="interests" value="mountains">
+                            <span>Mountains & Hiking</span>
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" name="interests" value="wildlife">
+                            <span>Wildlife & Nature</span>
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" name="interests" value="culture">
+                            <span>History & Culture</span>
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" name="interests" value="food">
+                            <span>Food & Cuisine</span>
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" name="interests" value="photography">
+                            <span>Photography</span>
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" name="interests" value="watersports">
+                            <span>Water Sports</span>
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" name="interests" value="shopping">
+                            <span>Shopping</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-glow">
+                    <i class="fas fa-magic"></i> Generate AI Itinerary
+                </button>
+            </form>
+
+            <!-- Loading Animation -->
+            <div class="loading-animation" id="loadingAnimation">
+                <div class="ai-brain animate-pulse">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>AI is creating your perfect itinerary...</h3>
+                <div class="loading-dots">
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+            </div>
+
+            <!-- AI Generated Result -->
+            <div class="ai-result" id="aiResult">
+                <h2>Your AI-Generated Itinerary</h2>
+                <div id="itineraryContent">
+                    <!-- AI generated content will appear here -->
+                </div>
+                <div class="save-options">
+                    <button class="btn btn-primary" onclick="downloadItinerary()">
+                        <i class="fas fa-download"></i> Download PDF
+                    </button>
+                    <button class="btn btn-secondary" onclick="shareItinerary()">
+                        <i class="fas fa-share"></i> Share
+                    </button>
+                    <button class="btn btn-outline" onclick="regenerateItinerary()">
+                        <i class="fas fa-redo"></i> Regenerate
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (Same as other pages) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="images/logo.png" alt="Bhromonghuri" class="footer-logo">
+                    <p>Where AI Meets Adventure. Join our community of travelers and explore the world.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="trips.html">All Trips</a></li>
+                        <li><a href="trip-planner.html">AI Trip Planner</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="events.html">Events</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <p><i class="fas fa-envelope"></i> info@bhromonghuri.com</p>
+                    <p><i class="fas fa-phone"></i> +880 1234-567890</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Dhaka, Bangladesh</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Bhromonghuri. All rights reserved. Made with ❤️ in Bangladesh</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/trip-planner.js"></script>
+    <script src="js/ai-features.js"></script>
+    
+    <!-- Add Mood-Based Trip Suggestions -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add mood selector after the form
+            const moodSection = document.createElement('section');
+            moodSection.className = 'mood-section';
+            moodSection.innerHTML = `
+                <div class="planner-container">
+                    <h2 data-translate="suggestByMood">Get Trip Suggestions by Mood</h2>
+                    <p>How are you feeling? Let AI suggest perfect trips for your mood!</p>
+                    
+                    <div class="mood-selector">
+                        <div class="mood-card" data-mood="adventurous">
+                            <i class="fas fa-mountain"></i>
+                            <h4>Adventurous</h4>
+                            <p>Seeking thrills & excitement</p>
+                        </div>
+                        <div class="mood-card" data-mood="relaxing">
+                            <i class="fas fa-spa"></i>
+                            <h4>Relaxing</h4>
+                            <p>Need peace & tranquility</p>
+                        </div>
+                        <div class="mood-card" data-mood="cultural">
+                            <i class="fas fa-monument"></i>
+                            <h4>Cultural</h4>
+                            <p>Explore history & heritage</p>
+                        </div>
+                        <div class="mood-card" data-mood="romantic">
+                            <i class="fas fa-heart"></i>
+                            <h4>Romantic</h4>
+                            <p>Special moments together</p>
+                        </div>
+                        <div class="mood-card" data-mood="family">
+                            <i class="fas fa-users"></i>
+                            <h4>Family Fun</h4>
+                            <p>Quality time with loved ones</p>
+                        </div>
+                    </div>
+                    
+                    <div class="ai-filters">
+                        <div class="form-group">
+                            <label>Budget Range</label>
+                            <select id="moodBudget">
+                                <option value="5000-15000">৳5,000 - ৳15,000</option>
+                                <option value="15000-30000">৳15,000 - ৳30,000</option>
+                                <option value="30000-50000">৳30,000 - ৳50,000</option>
+                                <option value="50000+">৳50,000+</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Season</label>
+                            <div class="season-selector">
+                                <button class="season-btn active" data-season="winter">Winter</button>
+                                <button class="season-btn" data-season="summer">Summer</button>
+                                <button class="season-btn" data-season="monsoon">Monsoon</button>
+                                <button class="season-btn" data-season="autumn">Autumn</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="moodSuggestions" class="mood-suggestions"></div>
+                </div>
+            `;
+            
+            document.querySelector('.trip-planner-section').appendChild(moodSection);
+            
+            // Initialize mood selection
+            let selectedMood = null;
+            let selectedSeason = 'winter';
+            
+            document.querySelectorAll('.mood-card').forEach(card => {
+                card.addEventListener('click', async () => {
+                    document.querySelectorAll('.mood-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    selectedMood = card.dataset.mood;
+                    
+                    const budget = document.getElementById('moodBudget').value;
+                    const suggestions = await AIFeatures.suggestTripsByMood(selectedMood, budget, selectedSeason, currentLanguage);
+                    displayMoodSuggestions(suggestions);
+                });
+            });
+            
+            document.querySelectorAll('.season-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.season-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedSeason = btn.dataset.season;
+                });
+            });
+        });
+        
+        function displayMoodSuggestions(suggestions) {
+            const container = document.getElementById('moodSuggestions');
+            container.innerHTML = '<h3>AI Recommended Trips for You:</h3>' + 
+                suggestions.map(trip => `
+                    <div class="suggested-trip">
+                        <h4>${trip.name}</h4>
+                        <p>Duration: ${trip.duration} | Budget: ৳${trip.price.toLocaleString()}</p>
+                        <button class="btn btn-primary btn-sm" onclick="bookTrip('${trip.name}')">View Details</button>
+                    </div>
+                `).join('');
+        }
+        
+        function bookTrip(tripName) {
+            window.location.href = `trips.html?search=${encodeURIComponent(tripName)}`;
+        }
+    </script>
+</body>
+</html>

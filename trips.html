@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Trips - Bhromonghuri</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation (Same as index.html) -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="images/logo.png" alt="Bhromonghuri" class="logo">
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link">Home</a>
+                <div class="nav-dropdown">
+                    <a href="trips.html" class="nav-link active">Explore Trips <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="trips.html?type=domestic">Domestic Trips</a>
+                        <a href="trips.html?type=international">International Trips</a>
+                    </div>
+                </div>
+                <a href="trip-planner.html" class="nav-link ai-link">
+                    <i class="fas fa-robot"></i> AI Trip Planner
+                </a>
+                <a href="gallery.html" class="nav-link">Gallery</a>
+                <a href="events.html" class="nav-link">Events</a>
+                <a href="blog.html" class="nav-link">Blog</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="page-header" style="background-image: url('images/trips-bg.jpg');">
+        <div class="container">
+            <h1 class="animate-fade-in">Explore Amazing Trips</h1>
+            <p class="animate-fade-in-up">Discover your next adventure with our curated trips</p>
+        </div>
+    </header>
+
+    <!-- Trips Section -->
+    <section class="trips-page">
+        <div class="container">
+            <!-- Search and Filter -->
+            <div class="trips-controls">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search destinations...">
+                    <button id="searchBtn"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All Trips</button>
+                    <button class="filter-btn" data-filter="domestic">Domestic</button>
+                    <button class="filter-btn" data-filter="international">International</button>
+                </div>
+            </div>
+
+            <!-- Trips Grid -->
+            <div class="trips-grid" id="tripsGrid">
+                <!-- Trips will be loaded dynamically from data.js -->
+            </div>
+
+            <!-- Load More -->
+            <div class="text-center mt-4">
+                <button class="btn btn-outline" id="loadMoreBtn">Load More Trips</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section (Same as index.html) -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <h2>Get Travel Inspiration</h2>
+                <p>Subscribe to receive AI-powered travel tips and exclusive deals</p>
+                <form class="newsletter-form" id="newsletterForm">
+                    <input type="email" placeholder="Enter your email" required>
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (Same as index.html) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="images/logo.png" alt="Bhromonghuri" class="footer-logo">
+                    <p>Where AI Meets Adventure. Join our community of travelers and explore the world.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="trips.html">All Trips</a></li>
+                        <li><a href="trip-planner.html">AI Trip Planner</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="events.html">Events</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <p><i class="fas fa-envelope"></i> info@bhromonghuri.com</p>
+                    <p><i class="fas fa-phone"></i> +880 1234-567890</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Dhaka, Bangladesh</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Bhromonghuri. All rights reserved. Made with ❤️ in Bangladesh</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Load trips on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const tripsGrid = document.getElementById('tripsGrid');
+            const urlParams = new URLSearchParams(window.location.search);
+            const typeFilter = urlParams.get('type') || 'all';
+            
+            // Filter trips based on URL parameter
+            let filteredTrips = trips;
+            if (typeFilter !== 'all') {
+                filteredTrips = trips.filter(trip => trip.type === typeFilter);
+                // Update active filter button
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.filter === typeFilter) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+            
+            // Display trips
+            tripsGrid.innerHTML = filteredTrips.map(trip => `
+                <div class="trip-card" data-type="${trip.type}">
+                    <img src="${trip.image}" alt="${trip.title}">
+                    <div class="trip-card-content">
+                        <span class="trip-badge">${trip.type}</span>
+                        <h3>${trip.title}</h3>
+                        <p>${trip.description}</p>
+                        <div class="trip-details">
+                            <span><i class="fas fa-calendar"></i> ${trip.duration}</span>
+                            <span class="trip-price">৳${trip.price.toLocaleString()}</span>
+                        </div>
+                        <button class="btn btn-primary register-trip-btn" 
+                                data-trip-id="${trip.id}" 
+                                data-trip-title="${trip.title}">
+                            Book Now
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Initialize trip filters and registration
+            initTripFilters();
+            initTripRegistration();
+        });
+    </script>
+</body>
+</html>
