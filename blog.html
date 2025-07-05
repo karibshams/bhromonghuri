@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Blog - Bhromonghuri</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* Blog Specific Styles */
+        .blog-hero {
+            background: var(--gradient);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+        
+        .blog-search {
+            max-width: 600px;
+            margin: 2rem auto;
+            position: relative;
+        }
+        
+        .blog-search input {
+            width: 100%;
+            padding: 1rem 3rem 1rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+        }
+        
+        .blog-search button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+        
+        .blog-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+        
+        .blog-main {
+            display: grid;
+            gap: 2rem;
+        }
+        
+        .blog-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 1.5rem;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .blog-card.featured {
+            grid-template-columns: 1fr;
+            grid-column: 1 / -1;
+        }
+        
+        .blog-card.featured .blog-image {
+            height: 300px;
+        }
+        
+        .blog-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .blog-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .blog-category {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            background: var(--gradient);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .blog-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+            text-decoration: none;
+        }
+        
+        .blog-title:hover {
+            color: var(--primary-color);
+        }
+        
+        .blog-excerpt {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .blog-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #999;
+            font-size: 0.9rem;
+        }
+        
+        .blog-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .author-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+        
+        .blog-stats {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .blog-stats span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        /* Sidebar */
+        .blog-sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+        
+        .sidebar-widget {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .sidebar-widget h3 {
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+        
+        .category-list {
+            list-style: none;
+        }
+        
+        .category-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .category-list a {
+            text-decoration: none;
+            color: #666;
+            transition: var(--transition);
+        }
+        
+        .category-list a:hover {
+            color: var(--primary-color);
+        }
+        
+        .category-count {
+            background: #f0f0f0;
+            padding: 0.2rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .popular-post {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .popular-post:last-child {
+            border: none;
+            margin-bottom: 0;
+        }
+        
+        .popular-post img {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .popular-post-content h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .popular-post-content a {
+            text-decoration: none;
+            color: var(--dark-color);
+        }
+        
+        .popular-post-content a:hover {
+            color: var(--primary-color);
+        }
+        
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .tag {
+            padding: 0.4rem 1rem;
+            background: #f0f0f0;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            text-decoration: none;
+            color: #666;
+            transition: var(--transition);
+        }
+        
+        .tag:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        /* Newsletter Widget */
+        .newsletter-widget input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        /* Pagination */
+        .blog-pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+        }
+        
+        .pagination-btn {
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .pagination-btn.active,
+        .pagination-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .blog-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .blog-sidebar {
+                position: static;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .blog-card {
+                grid-template-columns: 1fr;
+            }
+            
+            .blog-search {
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="images/logo.png" alt="Bhromonghuri" class="logo">
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link">Home</a>
+                <div class="nav-dropdown">
+                    <a href="trips.html" class="nav-link">Explore Trips <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="trips.html?type=domestic">Domestic Trips</a>
+                        <a href="trips.html?type=international">International Trips</a>
+                    </div>
+                </div>
+                <a href="trip-planner.html" class="nav-link ai-link">
+                    <i class="fas fa-robot"></i> AI Trip Planner
+                </a>
+                <a href="gallery.html" class="nav-link">Gallery</a>
+                <a href="events.html" class="nav-link">Events</a>
+                <a href="blog.html" class="nav-link active">Blog</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Blog Hero -->
+    <section class="blog-hero">
+        <div class="container">
+            <h1 class="animate-fade-in">Travel Stories & Tips</h1>
+            <p class="animate-fade-in-up">Discover insights, guides, and adventures from our community</p>
+            <div class="blog-search animate-scale-in">
+                <input type="text" placeholder="Search articles...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Content -->
+    <section class="blog-section">
+        <div class="container">
+            <div class="blog-container">
+                <!-- Blog Posts -->
+                <div class="blog-main">
+                    <!-- Featured Post -->
+                    <article class="blog-card featured" data-aos="fade-up">
+                        <img src="images/blog/hidden-gems.jpg" alt="Hidden Gems" class="blog-image">
+                        <div class="blog-content">
+                            <span class="blog-category">Destinations</span>
+                            <a href="#" class="blog-title">
+                                <h2>10 Hidden Gems in Bangladesh You Must Visit</h2>
+                            </a>
+                            <p class="blog-excerpt">
+                                Discover the lesser-known destinations in Bangladesh that will take your breath away. From pristine beaches to ancient archaeological sites, these hidden gems offer authentic experiences away from the tourist crowds.
+                            </p>
+                            <div class="blog-meta">
+                                <div class="blog-author">
+                                    <img src="https://randomuser.me/api/portraits/women/3.jpg" alt="Author" class="author-avatar">
+                                    <span>Sarah Rahman</span>
+                                    <span>• Jan 15, 2024</span>
+                                </div>
+                                <div class="blog-stats">
+                                    <span><i class="far fa-eye"></i> 2.5k</span>
+                                    <span><i class="far fa-comment"></i> 45</span>
+                                    <span><i class="far fa-heart"></i> 312</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Regular Posts -->
+                    <article class="blog-card" data-aos="fade-up">
+                        <img src="images/blog/packing.jpg" alt="Packing Tips" class="blog-image">
+                        <div class="blog-content">
+                            <span class="blog-category">Travel Tips</span>
+                            <a href="#" class="blog-title">
+                                <h3>How to Pack Light for Long Trips</h3>
+                            </a>
+                            <p class="blog-excerpt">
+                                Master the art of minimalist packing without missing essentials. Learn the techniques that experienced travelers use to pack efficiently.
+                            </p>
+                            <div class="blog-meta">
+                                <div class="blog-author">
+                                    <img src="https://randomuser.me/api/portraits/men/4.jpg" alt="Author" class="author-avatar">
+                                    <span>Ahmed Khan</span>
+                                    <span>• Jan 10, 2024</span>
+                                </div>
+                                <div class="blog-stats">
+                                    <span><i class="far fa-eye"></i> 1.8k</span>
+                                    <span><i class="far fa-comment"></i> 23</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="blog-card" data-aos="fade-up">
+                        <img src="images/blog/solo-travel.jpg" alt="Solo Travel" class="blog-image">
+                        <div class="blog-content">
+                            <span class="blog-category">Solo Travel</span>
+                            <a href="#" class="blog-title">
+                                <h3>Solo Travel Safety Tips for Women</h3>
+                            </a>
+                            <p class="blog-excerpt">
+                                Essential safety guidelines and empowering advice for women traveling alone. Build confidence and explore the world safely.
+                            </p>
+                            <div class="blog-meta">
+                                <div class="blog-author">
+                                    <img src="https://randomuser.me/api/portraits/women/5.jpg" alt="Author" class="author-avatar">
+                                    <span>Maria Khan</span>
+                                    <span>• Jan 5, 2024</span>
+                                </div>
+                                <div class="blog-stats">
+                                    <span><i class="far fa-eye"></i> 3.2k</span>
+                                    <span><i class="far fa-comment"></i> 67</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="blog-card" data-aos="fade-up">
+                        <img src="images/blog/food-tour.jpg" alt="Food Tour" class="blog-image">
+                        <div class="blog-content">
+                            <span class="blog-category">Food & Culture</span>
+                            <a href="#" class="blog-title">
+                                <h3>Ultimate Street Food Guide to Old Dhaka</h3>
+                            </a>
+                            <p class="blog-excerpt">
+                                Embark on a culinary journey through the historic streets of Old Dhaka. Discover authentic flavors and hidden food gems.
+                            </p>
+                            <div class="blog-meta">
+                                <div class="blog-author">
+                                    <img src="https://randomuser.me/api/portraits/men/6.jpg" alt="Author" class="author-avatar">
+                                    <span>Rafiq Islam</span>
+                                    <span>• Dec 28, 2023</span>
+                                </div>
+                                <div class="blog-stats">
+                                    <span><i class="far fa-eye"></i> 4.1k</span>
+                                    <span><i class="far fa-comment"></i> 89</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Pagination -->
+                    <div class="blog-pagination">
+                        <button class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
+                        <button class="pagination-btn active">1</button>
+                        <button class="pagination-btn">2</button>
+                        <button class="pagination-btn">3</button>
+                        <button class="pagination-btn">4</button>
+                        <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <aside class="blog-sidebar">
+                    <!-- Categories Widget -->
+                    <div class="sidebar-widget">
+                        <h3>Categories</h3>
+                        <ul class="category-list">
+                            <li>
+                                <a href="#">Destinations</a>
+                                <span class="category-count">24</span>
+                            </li>
+                            <li>
+                                <a href="#">Travel Tips</a>
+                                <span class="category-count">18</span>
+                            </li>
+                            <li>
+                                <a href="#">Food & Culture</a>
+                                <span class="category-count">15</span>
+                            </li>
+                            <li>
+                                <a href="#">Solo Travel</a>
+                                <span class="category-count">12</span>
+                            </li>
+                            <li>
+                                <a href="#">Budget Travel</a>
+                                <span class="category-count">9</span>
+                            </li>
+                            <li>
+                                <a href="#">Adventure</a>
+                                <span class="category-count">21</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Popular Posts Widget -->
+                    <div class="sidebar-widget">
+                        <h3>Popular Posts</h3>
+                        <div class="popular-posts">
+                            <div class="popular-post">
+                                <img src="images/blog/cox-bazar-guide.jpg" alt="Cox's Bazar">
+                                <div class="popular-post-content">
+                                    <h4><a href="#">Complete Guide to Cox's Bazar</a></h4>
+                                    <small>5.2k views</small>
+                                </div>
+                            </div>
+                            <div class="popular-post">
+                                <img src="images/blog/budget-nepal.jpg" alt="Nepal Budget">
+                                <div class="popular-post-content">
+                                    <h4><a href="#">Nepal on a Budget: 7 Days</a></h4>
+                                    <small>4.8k views</small>
+                                </div>
+                            </div>
+                            <div class="popular-post">
+                                <img src="images/blog/monsoon-travel.jpg" alt="Monsoon Travel">
+                                <div class="popular-post-content">
+                                    <h4><a href="#">Best Monsoon Destinations</a></h4>
+                                    <small>3.9k views</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tags Widget -->
+                    <div class="sidebar-widget">
+                        <h3>Popular Tags</h3>
+                        <div class="tag-cloud">
+                            <a href="#" class="tag">Adventure</a>
+                            <a href="#" class="tag">Beach</a>
+                            <a href="#" class="tag">Culture</a>
+                            <a href="#" class="tag">Food</a>
+                            <a href="#" class="tag">Mountains</a>
+                            <a href="#" class="tag">Photography</a>
+                            <a href="#" class="tag">Solo Travel</a>
+                            <a href="#" class="tag">Budget</a>
+                            <a href="#" class="tag">Luxury</a>
+                            <a href="#" class="tag">Wildlife</a>
+                        </div>
+                    </div>
+
+                    <!-- Newsletter Widget -->
+                    <div class="sidebar-widget">
+                        <h3>Subscribe to Newsletter</h3>
+                        <p>Get weekly travel tips and exclusive offers!</p>
+                        <form>
+                            <input type="email" placeholder="Your email address" required>
+                            <button class="btn btn-primary" style="width: 100%;">Subscribe</button>
+                        </form>
+                    </div>
+
+                    <!-- AI Assistant Widget -->
+                    <div class="sidebar-widget" style="background: var(--gradient); color: white;">
+                        <h3 style="color: white;">Need Travel Advice?</h3>
+                        <p>Ask our AI assistant for personalized travel tips!</p>
+                        <button class="btn btn-secondary" style="width: 100%;" onclick="toggleChat()">
+                            <i class="fas fa-robot"></i> Chat with AI
+                        </button>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="images/logo.png" alt="Bhromonghuri" class="footer-logo">
+                    <p>Where AI Meets Adventure. Join our community of travelers and explore the world.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="trips.html">All Trips</a></li>
+                        <li><a href="trip-planner.html">AI Trip Planner</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="events.html">Events</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <p><i class="fas fa-envelope"></i> info@bhromonghuri.com</p>
+                    <p><i class="fas fa-phone"></i> +880 1234-567890</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Dhaka, Bangladesh</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Bhromonghuri. All rights reserved. Made with ❤️ in Bangladesh</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/ai-features.js"></script>
+    <script>
+        // Blog specific functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            // Search functionality
+            const searchInput = document.querySelector('.blog-search input');
+            const searchButton = document.querySelector('.blog-search button');
+            
+            searchButton.addEventListener('click', () => {
+                const query = searchInput.value.trim();
+                if (query) {
+                    showNotification(`Searching for: ${query}`, 'info');
+                    // Implement search functionality here
+                }
+            });
+            
+            // Newsletter subscription
+            const newsletterForm = document.querySelector('.newsletter-widget form');
+            if (newsletterForm) {
+                newsletterForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    showNotification('Successfully subscribed to newsletter!', 'success');
+                    e.target.reset();
+                });
+            }
+            
+            // Like functionality
+            document.querySelectorAll('.fa-heart').forEach(heart => {
+                heart.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    heart.classList.toggle('fas');
+                    heart.classList.toggle('far');
+                    if (heart.classList.contains('fas')) {
+                        heart.style.color = '#e74c3c';
+                    } else {
+                        heart.style.color = '';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
