@@ -142,4 +142,47 @@ Testimonials and trip details are presented as cards, with interactive sliders f
 How to Set Up Locally
 Clone the Repository:
 
+bash
+Copy
+git clone https://github.com/your-repo/bhromonghuri.git
+Navigate to the project folder:
 
+bash
+Copy
+cd bhromonghuri
+Open the index.html file in your browser:
+
+Double-click on index.html to open the website in your default browser.
+
+Customize Content:
+
+Update the text content, links, and images according to your brand.
+
+Customize the styles in css/style.css and css/responsive.css to match your design preferences.
+
+Language Toggle Setup:
+
+Add translations for the content in the AIFeatures.setLanguage() method in js/ai-features.js.
+
+Future Enhancements
+Trip Booking System: Integrate a booking system to allow users to book trips directly through the platform.
+
+User Profiles: Allow users to create accounts and manage their trips, itineraries, and preferences.
+
+Event Registration: Add event registration capabilities for travel-related events and meetups.
+
+Search Functionality: Implement a search feature to allow users to find trips and experiences more easily.
+
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+Acknowledgements
+Font Awesome: Used for social media icons and other interface elements.
+
+AOS (Animate On Scroll): For the scroll-based animations.
+
+Google Fonts: For typography used in the website.
+
+Bing Maps API (optional): If you plan to integrate maps into your platform.
+
+Enjoy exploring the world of Bhromonghuri, where AI meets adventure!
